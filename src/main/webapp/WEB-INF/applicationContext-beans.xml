@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	
+	<!-- Spring的配置 -->
+	
+	<!-- 引入properties文件 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>classpath:db.properties</value>
+		</property>
+	</bean>
+	
+	
+	<!-- 扫描注解的包 -->
+	<context:component-scan base-package="cn.dfx.share_record_SSM.dsum"></context:component-scan>
+	
+	<!-- 业务层对象的注入 -->
+	<bean id="personService" class="cn.dfx.share_record_SSM.dsum.base.service.PersonService"></bean>
+	<bean id="mailService" class="cn.dfx.share_record_SSM.dsum.mail.service.MailService"></bean>
+	<bean id="planService" class="cn.dfx.share_record_SSM.dsum.plan.service.PlanService"></bean>
+	<bean id="noteService" class="cn.dfx.share_record_SSM.dsum.note.service.NoteService"></bean>
+	<bean id="meetingService" class="cn.dfx.share_record_SSM.dsum.meeting.service.MeetingService"></bean>
+	<bean id="noticeService" class="cn.dfx.share_record_SSM.dsum.admin.service.NoticeService"></bean>
+	
+<!--配数据源本示例采用DBCP连接池--> 
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	  <property name="driverClassName" value="${driver}" />
+	    
+	  <property name="username">
+	    <value>${username}</value>
+	  </property>
+	  <property name="password">
+	    <value>${password}</value>
+	  </property>
+	  <property name="url">
+	    <value>${url}</value>
+	  </property>
+	</bean>
+	 
+	 
+	
+	<!--配置sqlSessionFactory-->
+	  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+	     <!--dataSource属性指定要用到的连接池--> 
+	     <property name="dataSource" ref="dataSource"/> 
+	     <!--所有实体类的映射文件：第一种映射会打包为war包时 ，xml文件不会被打包进入，换成第二种，将xml文件放在resource目录下--> 
+	     <!-- <property name="mapperLocations" value="classpath*:cn/dfx/share_record_SSM/dsum/**/*.xml"/>  -->
+	     <property name="mapperLocations" value="classpath*:**/*.xml"/> 
+	  </bean> 
+	  
+	 <!--配置映射器 扫描定义的mapper接口  basePackage指定要扫描的包，
+	            在此包之下的映射器都会被  搜索到。可指定多个包，包与包之间用逗号或分号分隔--> 
+	 <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+	   <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+	   <property name="basePackage" value="cn.dfx.share_record_SSM.dsum.base.mapper;
+							   			   cn.dfx.share_record_SSM.dsum.admin.mapper;
+							   			   cn.dfx.share_record_SSM.dsum.meeting.mapper;
+							   			   cn.dfx.share_record_SSM.dsum.note.mapper;
+							   			   cn.dfx.share_record_SSM.dsum.plan.mapper;
+							   			   cn.dfx.share_record_SSM.dsum.mail.mapper;"/>  
+	 </bean>  
+ 	
+  
+  <!-- 事务管理器 -->    
+    <bean id="transactionManager"    
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">    
+        <property name="dataSource" ref="dataSource" />    
+    </bean>   
+    
+ </beans>

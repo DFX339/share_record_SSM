@@ -1,0 +1,87 @@
+	*{margin:0;padding:0;}
+    .plan{
+    	overflow-x:hidden;
+    	overflow-y:auto;
+    	font-size:18px;
+    	height:100%;
+    	width:100%;
+    	background:url(images/background_1.jpg);
+    	/* opacity:0.9; */
+    }
+    
+    /*添加今日计划的css*/
+    .plan>.addPlan{
+	    width:100%;
+    }
+	.plan>.addPlan>.planContent>textarea{
+		margin-top:12px;
+		margin-left:72px;
+    	border-radius:12px;
+    	border:2px solid red;
+    	font-size:18px;
+    	font-weight:bold;
+    	color:black;
+		float:left;
+	}
+	.plan>.addPlan>.planButton>button{
+		float:left;
+		margin-left:20px;
+		margin-top:69px;
+		width:150px;
+		height:36px;
+		font-size:20px;
+		color:white;
+    	border-radius:9px;
+    	border:3px solid white;
+    	background-color:red;
+	}
+	
+	/*显示每日计划的CSS*/
+	.showPlan{
+		width:100%;
+		margin-top:219px;
+	}
+	.showPlan>.eachPlan{
+		margin-top:20px;
+		margin-left:76px;
+		width:1038px;;
+		height:auto;
+		background-color:white;
+		border-left:1px solid #c1b1b1;
+		border-right:1px solid #c1b1b1;
+		padding:10px;
+	}
+	.showPlan>.eachPlan>.showUsername{
+		font-size:20px;
+		font-weight:bold;
+		font-family:'楷体';
+		float:left;
+	}
+	.showPlan>.eachPlan>.showCreatetiem{
+		font-size:12px;
+		float:left;
+		margin-left:12px;
+		margin-top:5px;
+	}
+	.showPlan>.eachPlan>.showContent{
+		font-size:18px;
+		color:black;
+		margin:3px;
+	}
+	.showPlan>.eachPlan>.showEdit{
+		float:left;
+		font-size:14px;
+		padding-bottom:10px;
+	}
+	.showPlan>.eachPlan>.showDelete{
+		padding-bottom:10px;
+		font-size:14px;
+		float:left;
+		margin-left:20px;
+	}
+	.showPlan>.eachPlan>.showEdit>a{
+		text-decoration:none;
+	}
+	.showPlan>.eachPlan>.showDelete>a{
+		text-decoration:none;
+	}

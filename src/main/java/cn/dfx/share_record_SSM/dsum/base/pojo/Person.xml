@@ -1,0 +1,28 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.dfx.share_record_SSM.dsum.base.mapper.PersonMapper">
+	
+	<!-- <resultMap id="personList" type="cn.dfx.share_record_SSM.dsum.base.pojo.Person"> 
+		<result property="id" column="id" />
+		<result property="username" column="username" />
+		<result property="usernum" column="usernum" />
+		<result property="password" column="password" />
+		<result property="identity" column="identity" />
+		<result property="companynum" column="companynum" />
+	</resultMap>
+	 -->
+  <!--登录 -->
+    <select id="login"   parameterType="cn.dfx.share_record_SSM.dsum.base.pojo.Person"  resultType="cn.dfx.share_record_SSM.dsum.base.pojo.Person">
+        SELECT id,usernum,username,password,identity,companynum
+           FROM t_person  WHERE usernum=#{usernum} AND password=#{password} 
+           AND identity=#{identity}
+    </select>
+    
+   <!--注册 -->
+   <insert id="add" parameterType="cn.dfx.share_record_SSM.dsum.base.pojo.Person">
+   		INSERT INTO t_person(usernum,username,password,identity,companynum)
+   			 VALUES(#{usernum},#{username},#{password},#{identity},#{companynum})
+   </insert>
+    
+</mapper>

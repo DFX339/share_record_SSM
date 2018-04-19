@@ -1,0 +1,54 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.dfx.share_record_SSM.dsum.admin.mapper.NoticeMapper">
+	
+	 <resultMap id="noticeList" type="cn.dfx.share_record_SSM.dsum.admin.pojo.Notice"> 
+		<result property="id" column="id" />
+		<result property="content" column="content" />
+		<result property="createtime" column="createtime" />
+		<result property="createid" column="createid" />
+	 </resultMap>
+	 
+  <!--查询通告 -->
+    <select id="findByCondition"   parameterType="cn.dfx.share_record_SSM.dsum.admin.pojo.Notice" resultMap="noticeList"  >
+        SELECT id,content,createtime,createid
+           FROM t_notice  WHERE  1=1
+        <if test="id !=null and id !=''">
+		AND id LIKE #{id}
+		</if>
+		<if test="content !=null and content !=''">
+		AND content LIKE CONCAT(CONCAT('%', #{content}), '%')
+		</if>
+		<if test="createid !=null and createid !=''">
+		AND createid LIKE #{createid}
+		</if>
+		<if test="createtime !=null and createtime !=''">
+		AND createtime LIKE #{createtime}
+		</if>
+		ORDER BY createtime DESC
+    </select>
+    
+   <!--添加通告 -->
+   <insert id="addNotice" parameterType="cn.dfx.share_record_SSM.dsum.admin.pojo.Notice">
+   		INSERT INTO t_notice(id,content,createtime,createid)
+   			 VALUES(#{id},#{content},#{createtime},#{createid})
+   </insert>
+    
+    <!-- 编辑通告 -->
+    <update id="editNotice" parameterType="cn.dfx.share_record_SSM.dsum.admin.pojo.Notice">
+    	UPDATE t_notice set 
+    	     content=#{content},createtime=#{createtime},createid=#{createid} where id=#{id}
+    </update>
+    
+    <!-- 删除通告 -->
+    <delete id="deleteNotice" parameterType="int">
+    	DELETE FROM t_notice where id=#{0}
+    </delete>
+    
+    <!-- 查看热门通告 -->
+    <select id="findHotNotice"  resultMap="noticeList">
+    	 SELECT id,content,createtime,createid
+           FROM t_notice   ORDER BY createtime DESC limit 5
+    </select>
+</mapper>

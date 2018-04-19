@@ -1,0 +1,31 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.dfx.share_record_SSM.dsum.meeting.mapper.MeetingCommentMapper">
+
+	<resultMap id="meetingCommentList" type="cn.dfx.share_record_SSM.dsum.meeting.pojo.MeetingComment"> 
+		<result property="id" column="id" />
+		<result property="meetingid" column="meetingid" />
+		<result property="meetinguserid" column="meetinguserid" />
+		<result property="commentid" column="commentid" />
+		<result property="content" column="content" />
+		<result property="createtime" column="createtime" />
+	</resultMap>
+	
+	<!-- 添加会议评论 -->
+	<insert id="addComment" parameterType="cn.dfx.share_record_SSM.dsum.meeting.pojo.MeetingComment">
+		INSERT INTO t_meetingcomment(meetingid,meetinguserid,commentid,content,createtime) 
+			VALUES(#{meetingid},#{meetinguserid},#{commentid},#{content},#{createtime})
+	</insert>
+	
+	<!-- 删除会议评论 -->
+	<delete id="deleteComment" parameterType="int">
+		DELETE FROM t_meetingcomment where id=#{0}
+	</delete>
+	
+	<!-- 根据笔记id查询出对应的会议评论内容-->
+	<select id="findMeetingCommentByMeetingId" parameterType="int" resultMap="meetingCommentList">
+		SELECT id,meetingid,meetinguserid,commentid,content,createtime FROM t_meetingcomment where meetingid=#{0}
+	</select>
+	
+</mapper>

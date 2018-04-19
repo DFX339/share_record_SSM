@@ -1,0 +1,54 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.dfx.share_record_SSM.dsum.plan.mapper.PlanMapper">
+
+	<resultMap id="planList" type="cn.dfx.share_record_SSM.dsum.plan.pojo.Plan"> 
+		<result property="id" column="id" />
+		<result property="userid" column="userid" />
+		<result property="content" column="content" />
+		<result property="createtime" column="createtime" />
+	</resultMap>
+	
+	<!-- 添加计划 -->
+	<insert id="add" parameterType="cn.dfx.share_record_SSM.dsum.plan.pojo.Plan">
+		INSERT INTO t_plan(userid,content,createtime) 
+			VALUES(#{userid},#{content},#{createtime})
+	</insert>
+	
+	<!-- 修改计划 -->
+	<update id="edit" parameterType="cn.dfx.share_record_SSM.dsum.plan.pojo.Plan">
+		UPDATE t_plan SET content=#{content} , createtime=#{createtime} where id=#{id}
+	</update>
+	
+	<!-- 删除计划 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM t_plan where id=#{0}
+	</delete>
+	
+	<!-- 根据当前登录用户的userid查询出当前用户的所有计划-->
+	<select id="findAllPlan" parameterType="int" resultMap="planList">
+		SELECT id,userid,content,createtime FROM t_plan where userid=#{0} ORDER BY createtime DESC
+	</select>
+	
+	<!-- 查询出当前用户的指定计划 -->
+	<select id="findByCondition" parameterType="cn.dfx.share_record_SSM.dsum.plan.pojo.Plan" resultMap="planList">
+		SELECT id,userid,content,createtime FROM t_plan where 1=1
+		<if test="id !=null and id !=''">
+		AND id LIKE #{id}
+		</if>
+		<if test="userid !=null and userid !=''">
+		AND userid LIKE #{userid}
+		</if>
+		<if test="content !=null and content !=''">
+		AND content LIKE CONCAT(CONCAT('%', #{content}), '%')
+		</if>
+		<if test="createtime !=null and createtime !=''">
+		AND createtime LIKE #{createtime}
+		</if>
+		ORDER BY createtime DESC
+	</select>
+	
+	
+	
+</mapper>

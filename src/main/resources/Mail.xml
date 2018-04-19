@@ -1,0 +1,109 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.dfx.share_record_SSM.dsum.mail.mapper.MailMapper">
+
+	<resultMap id="mailList" type="cn.dfx.share_record_SSM.dsum.mail.pojo.Mail"> 
+		<result property="id" column="id" />
+		<result property="sendid" column="sendid" />
+		<result property="recieveid" column="recieveid" />
+		<result property="createtime" column="createtime" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="state" column="state" />
+	</resultMap>
+	
+	<!-- 添加邮件-->
+	<insert id="add" parameterType="cn.dfx.share_record_SSM.dsum.mail.pojo.Mail">
+		INSERT INTO t_mail(sendid,recieveid,title,content,state,createtime) 
+			VALUES(#{sendid},#{recieveid},#{title},#{content},#{state},#{createtime})
+	</insert>
+	
+	<!-- 更改邮件状态 -->
+	<update id="editState" parameterType="cn.dfx.share_record_SSM.dsum.mail.pojo.Mail">
+		UPDATE t_mail SET state=#{state}  where id=#{id}
+	</update>
+	
+	<!-- 删除邮件 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM t_mail where id=#{0}
+	</delete>
+	
+	<!-- 根据当前登录用户的id查询出当前用户的所发送的邮件-->
+	<select id="findMailById" parameterType="int" resultType="cn.dfx.share_record_SSM.dsum.mail.pojo.Mail">
+		SELECT id,sendid,recieveid,title,content,state,createtime FROM t_mail where id=#{0} 
+	</select>
+	<!-- 根据当前登录用户的userid查询出当前用户的所发送的邮件-->
+	<select id="findAllSendMails" parameterType="int" resultMap="mailList">
+		SELECT id,sendid,recieveid,title,content,state,createtime FROM t_mail where sendid=#{0} ORDER BY createtime DESC
+	</select>
+	
+	<!-- 根据当前登录用户的userid查询出当前用户的所接收的邮件-->
+	<select id="findAllRecieveMails" parameterType="int" resultMap="mailList">
+		SELECT id,sendid,recieveid,title,content,state,createtime FROM t_mail where recieveid=#{0} ORDER BY createtime DESC
+	</select>
+	
+	<!-- 最新注册的三位用户-->
+	<select id="findHotPerson"  resultMap="allPerson">
+		 SELECT id,usernum,username,password,identity,companynum
+           FROM t_person  ORDER BY id DESC limit 5
+	</select>
+	
+	<!-- 查询出当前用户的指定条件的接收到的邮件 -->
+	<select id="findByCondition" parameterType="cn.dfx.share_record_SSM.dsum.mail.pojo.Mail" resultMap="mailList">
+		SELECT  id,sendid,recieveid,title,content,state,createtime  FROM t_mail where 1=1
+		<if test="id !=null and id !=''">
+		AND id LIKE #{id}
+		</if>
+		<if test="sendid !=null and sendid !=''">
+		AND sendid LIKE #{sendid}
+		</if>
+		<if test="recieveid !=null and recieveid !=''">
+		AND recieveid LIKE #{recieveid}
+		</if>
+		<if test="title !=null and title !=''">
+		AND title LIKE CONCAT(CONCAT('%', #{title}), '%')
+		</if>
+		<if test="content !=null and content !=''">
+		AND content LIKE CONCAT(CONCAT('%', #{content}), '%')
+		</if>
+		<if test="state !=null and state !=''">
+		AND state LIKE #{state}
+		</if>
+		<if test="createtime !=null and createtime !=''">
+		AND createtime LIKE #{createtime}
+		</if>
+		ORDER BY createtime DESC
+	</select>
+	
+	<resultMap id="allPerson" type="cn.dfx.share_record_SSM.dsum.base.pojo.Person">
+		<result property="id" column="id" />
+		<result property="usernum" column="usernum" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="identity" column="identity" />
+		<result property="companynum" column="companynum" />
+	</resultMap>
+	<!-- 查询出所有的用户 -->
+	<select id="findAllPerson" parameterType="cn.dfx.share_record_SSM.dsum.base.pojo.Person" resultMap="allPerson">
+		 SELECT id,usernum,username,password,identity,companynum
+           FROM t_person  WHERE 1=1
+        <if test="id !=null and id !=''">
+		AND id LIKE #{id}
+		</if>
+		<if test="usernum !=null and usernum !=''">
+		AND usernum LIKE CONCAT(CONCAT('%', #{usernum}), '%')
+		</if>
+		<if test="username !=null and username !=''">
+		AND username LIKE CONCAT(CONCAT('%', #{username}), '%')
+		</if>
+		<if test="companynum !=null and companynum !=''">
+		AND companynum LIKE #{companynum}
+		</if>
+	</select>
+	
+	<!-- 删除指定用户 -->
+	<delete id="deletePerson" parameterType="int">
+		DELETE FROM t_person WHERE id=#{0}
+	</delete>
+</mapper>

@@ -1,0 +1,65 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.dfx.share_record_SSM.dsum.note.mapper.NoteMapper">
+
+	<resultMap id="noteList" type="cn.dfx.share_record_SSM.dsum.note.pojo.Note"> 
+		<result property="id" column="id" />
+		<result property="userid" column="userid" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="state" column="state" />
+		<result property="createtime" column="createtime" />
+	</resultMap>
+	
+	<!-- 添加笔记 -->
+	<insert id="add" parameterType="cn.dfx.share_record_SSM.dsum.note.pojo.Note">
+		INSERT INTO t_note(userid,title,content,createtime,state) 
+			VALUES(#{userid},#{title},#{content},#{createtime},#{state})
+	</insert>
+	
+	<!-- 修改笔记 -->
+	<update id="edit" parameterType="cn.dfx.share_record_SSM.dsum.note.pojo.Note">
+		UPDATE t_note SET title=#{title},content=#{content} ,state=#{state}, createtime=#{createtime} where id=#{id}
+	</update>
+	
+	<!-- 删除计笔记 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM t_note where id=#{0}
+	</delete>
+	
+	<!-- 查询出所有的公开的笔记内容以及当前登录用户的所有笔记-->
+	<select id="findAllNote" parameterType="cn.dfx.share_record_SSM.dsum.note.pojo.Note" resultMap="noteList">
+		SELECT id,userid,title,content,createtime ,state FROM t_note where userid=#{userid} or state='public'
+	</select>
+	
+	<!-- 查看最新的三条笔记 -->
+	<select id="findHotNote"  resultMap="noteList">
+		SELECT id,userid,title,content,createtime,state FROM t_note  ORDER BY createtime DESC LIMIT 5
+	</select>
+	
+	<!-- 根据条件查询笔记-->
+	<select id="findNoteByCondition" parameterType="cn.dfx.share_record_SSM.dsum.note.pojo.Note" resultMap="noteList">
+		SELECT id,userid,title,content,createtime,state FROM t_note where 1=1
+		<if test="id !=null and id !=''">
+		AND id LIKE #{id}
+		</if>
+		<if test="userid !=null and userid !=''">
+		AND userid LIKE #{userid}
+		</if>
+		<if test="title !=null and title !=''">
+		AND title LIKE CONCAT(CONCAT('%', #{title}), '%')
+		</if>
+		<if test="content !=null and content !=''">
+		AND content LIKE CONCAT(CONCAT('%', #{content}), '%')
+		</if>
+		<if test="createtime !=null and createtime !=''">
+		AND createtime LIKE #{createtime}
+		</if>
+		<if test="state !=null and state !=''">
+		AND state LIKE #{state}
+		</if>
+		ORDER BY createtime DESC
+	</select>
+	
+</mapper>

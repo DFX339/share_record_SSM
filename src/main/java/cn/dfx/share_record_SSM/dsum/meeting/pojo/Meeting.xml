@@ -1,0 +1,60 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.dfx.share_record_SSM.dsum.meeting.mapper.MeetingMapper">
+
+	<resultMap id="meetingList" type="cn.dfx.share_record_SSM.dsum.meeting.pojo.Meeting"> 
+		<result property="id" column="id" />
+		<result property="userid" column="userid" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="companynum" column="companynum" />
+		<result property="createtime" column="createtime" />
+	</resultMap>
+	
+	<!-- 添加会议内容 -->
+	<insert id="add" parameterType="cn.dfx.share_record_SSM.dsum.meeting.pojo.Meeting">
+		INSERT INTO t_meeting(userid,title,content,createtime,companynum) 
+			VALUES(#{userid},#{title},#{content},#{createtime},#{companynum})
+	</insert>
+	
+	<!-- 修改会议内容 -->
+	<update id="edit" parameterType="cn.dfx.share_record_SSM.dsum.meeting.pojo.Meeting">
+		UPDATE t_meeting SET title=#{title},content=#{content} ,companynum=#{companynum}, createtime=#{createtime} where id=#{id}
+	</update>
+	
+	<!-- 删除会议 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM t_meeting where id=#{0}
+	</delete>
+	
+	<!-- 查询当前公司的所有会议内容-->
+	<select id="findAllMeetings" parameterType="java.lang.String" resultMap="meetingList">
+		SELECT id,userid,title,content,createtime ,companynum FROM t_meeting where companynum=#{companynum}
+	</select>
+	
+	<!-- 根据条件查询笔记-->
+	<select id="findMeetingByCondition" parameterType="cn.dfx.share_record_SSM.dsum.meeting.pojo.Meeting" resultMap="meetingList">
+		SELECT id,userid,title,content,createtime,companynum FROM t_meeting where 1=1
+		<if test="id !=null and id !=''">
+		AND id LIKE #{id}
+		</if>
+		<if test="userid !=null and userid !=''">
+		AND userid LIKE #{userid}
+		</if>
+		<if test="title !=null and title !=''">
+		AND title LIKE CONCAT(CONCAT('%', #{title}), '%')
+		</if>
+		<if test="content !=null and content !=''">
+		AND content LIKE CONCAT(CONCAT('%', #{content}), '%')
+		</if>
+		<if test="createtime !=null and createtime !=''">
+		AND createtime LIKE #{createtime}
+		</if>
+		<if test="companynum !=null and companynum !=''">
+		AND state LIKE #{companynum}
+		</if>
+		ORDER BY createtime DESC
+	</select>
+	
+</mapper>

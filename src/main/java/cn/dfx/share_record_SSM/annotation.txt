@@ -1,0 +1,63 @@
+分享与计划
+分为5个模块
+1.基础模块：用户的登录注册（普通用户，公司用户，管理员（不能注册））
+2.邮箱模块：发送和接收（转发），用于用户之间的通信
+3.会议记录模块：记录会议内容，发布后可以被评论（仅本公司的人员可以看见）//普通用户看不到此模块
+4.笔记共享模块:笔记可以设置公开或者私密，可以被评论，也可以转发
+5.今日计划模块：记录当日的计划，便于提醒当事人 使其思绪更加清晰
+6.用户管理模块：用于管理普通用户和公司用户  账号的合法性（仅管理员具有此模块）
+
+mysql数据库中的table
+ 用户表  t_person:
+id       主键，主标识 自增
+usernum  用户账号
+username 用户昵称
+password 用户密码
+identity 用户身份(1表示普通用户，2表示公司用户，3表示管理员)
+companynum 公司编号//当注册用户为公司用户时不能为null，其余可以为null
+
+邮件表 t_mail:
+id         主键，主标识 自增
+sendid     发件人id
+recieveid  收件人id
+title      邮件主题
+content    邮件内容
+createtime 邮件接收/发送的时间
+state      邮件状态（已读、未读）
+
+会议表 t_meeting:
+id         主键，主标识 自增
+userid     发布会议记录者的id
+title      会议主题
+content    会议内容
+createtime 会议记录发布时间
+companynum 会议记录所属公司
+
+会议评论表 t_meetingcomment:
+id            主键，主标识 自增
+meetingid     会议id
+meetinguserid 会议发布者的id
+commentid     评论者id
+content       评论内容
+createtime    评论时间
+
+笔记表 t_note:
+id         主键，主标识 自增
+userid     笔记发布者的id
+title      笔记主题
+content    笔记内容
+createtime 笔记发布时间
+
+笔记评论表t_notecomment:
+id         主键，主标识 自增
+noteid     笔记id
+noteuserid 笔记发布者的id
+commentid     评论者id
+content       评论内容
+createtime    评论时间
+
+计划表 t_paln
+id         主键，主标识 自增
+userid	        制定计划者的id
+content    计划内容
+createtime 计划创建时间
